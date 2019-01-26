@@ -4,11 +4,10 @@ import com.onlinetutorialspoint.exception.ItemNotFoundException;
 import com.onlinetutorialspoint.model.Item;
 import com.onlinetutorialspoint.repo.ItemRepository;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-import org.springframework.web.util.UriComponentsBuilder;
 
 import java.util.List;
 
@@ -34,13 +33,10 @@ public class ItemController {
         return new ResponseEntity<Item>(item, HttpStatus.OK);
     }
 
-    @PostMapping(value = "/addItem",consumes = {"application/json"},produces = {"application/json"})
-    @ResponseBody
-    public ResponseEntity<Item> addItem(@RequestBody Item item,UriComponentsBuilder builder){
+    @PostMapping(value = "/addItem",consumes = MediaType.APPLICATION_JSON_VALUE)
+    public ResponseEntity<Item> addItem(@RequestBody Item item){
         itemRepo.addItem(item);
-        HttpHeaders headers = new HttpHeaders();
-        headers.setLocation(builder.path("/addItem/{id}").buildAndExpand(item.getId()).toUri());
-        return new ResponseEntity<Item>(headers, HttpStatus.CREATED);
+        return new ResponseEntity<Item>(item, HttpStatus.CREATED);
     }
 
     @PutMapping("/updateItem")
